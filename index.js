@@ -45,13 +45,45 @@ app.get('/services/:id', async(req, res) => {
       };
     const result = await serviceCollecton.findOne(query, options);
     res.send(result)
+    // console.log(result);
+})
+
+app.get('/bookings', async(req, res) => {
+  // console.log(req.query);
+  let query = {};
+  if(req.query?.email){
+    query = {email:req.query.email}
+  }
+  const result = await bookingCollection.find(query).toArray();
+  res.send(result)
 })
 
 app.post('/bookings', async(req, res) => {
     const booking = req.body;
     const result = await bookingCollection.insertOne(booking)
     res.send(result)
-    
+    // console.log(booking);
+})
+
+app.patch('/bookings/:id', async(req, res) => {
+  const id = req.params.id;
+  const query = {_id: new ObjectId(id)};
+  const updateBooking = req.body;
+  console.log(updateBooking);
+  const updateDoc = {
+    $set: {
+      status: 'updateBooking.status'
+    },
+  };
+  const result = await bookingCollection.updateOne(query, updateDoc);
+  res.send(result)
+})
+
+app.delete('/bookings/:id', async(req, res) => {
+  const id = req.params.id;
+  const query = {_id: new ObjectId(id)};
+  const result = await bookingCollection.deleteOne(query);
+  res.send(result)
 })
 
     // Send a ping to confirm a successful connection
