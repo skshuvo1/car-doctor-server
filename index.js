@@ -67,6 +67,11 @@ app.get('/services/:id', async(req, res) => {
 })
 
 app.get('/bookings',verifyJWT, async(req, res) => {
+  const decoded = req.decoded;
+  console.log(decoded);
+  if(decoded.email !== req.query.email){
+    return res.send({error:1, message:'unauthorised'})
+  }
   let query = {};
   if(req.query?.email){
     query = {email:req.query.email}
